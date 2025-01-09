@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { AuthService } from './auth/services/auth.service';
+import { Router } from '@angular/router';
+import { AuthStatus } from './auth/interfaces';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,16 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'VideosApp';
+
+  private authService = inject( AuthService );
+  private router = inject( Router );
+
+  public finishedAuthCheck = computed<boolean>( () => {
+
+
+    if ( (this.authService.authStatus() === AuthStatus.checking) || (this.authService.authStatus() === AuthStatus.notAuthenticated) ) {
+      return false;
+    }
+    return true;
+  });
 }
