@@ -175,7 +175,7 @@ export class NewPageComponent implements OnInit {
       this.videosService.updateVideo( this.currentVideo )
         .subscribe({
           next: () => {
-            Swal.fire('Actualizado', 'Heroe actualizado correctamente', 'success')
+            Swal.fire('Actualizado', 'Video actualizado correctamente', 'success')
           },
           error: (message) => {
             message = message != '' && message != undefined ? message : 'Ocurrio un error.';
@@ -197,7 +197,6 @@ export class NewPageComponent implements OnInit {
       .subscribe( video => {
         console.log(video);
         //TODO: mostrar snackbar, navegador a /heroes/Edit heroe.id
-        // this.router.navigate(['/heroes/edit', heroe.id]);
         Swal.fire('Guardado', video.message, 'success').then((result) => {
           if (result.isConfirmed) {
             this.videoForm.reset();
