@@ -1,0 +1,61 @@
+.img_video{
+  width: 100%;
+  height: 30vh;
+  border-radius: 5%;
+}
+
+.video_class {
+  width: 100%;
+  border-radius: 5%;
+}
+.centrar {
+  text-align: center;
+}
+
+.medium_loading {
+  width: 8rem; /* Spinner grande */
+  height: 8rem;
+  border: 1rem solid #ccc; /* Grosor más grueso */
+  border-top: 1rem solid #343a40; /* Color del borde superior */
+  border-radius: 50%;
+  /* animation: spin 0.8s linear infinite; */
+}
+
+.file-input-wrapper {
+  margin-bottom: 20px;
+}
+
+.custom-file-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #343a40;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.custom-file-button:hover {
+  background-color: #141516;
+}
+
+.input-hidden {
+  display: none;
+}
+
+.preview {
+  margin-top: 10px;
+}
+
+.preview img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.preview video {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

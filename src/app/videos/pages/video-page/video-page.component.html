@@ -1,0 +1,104 @@
+<div class="content-wrapper" *ngIf="finishedAuthCheck()">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0"> {{ video?.title }} </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container contenido" *ngIf="!finishedAuthCheck()">
+  <div class="row">
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+      <div class="row">
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+          <video width="940" height="360" controls class="video_Radius">
+            <source [src]="video | videoUrl" type="video/mp4"  *ngIf="video?.video_url"/>
+            Tu navegador no soporta la reproducción de videos.
+          </video>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+          <h1>{{ video?.title }}</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+          <h1 class="m-0"> {{ video?.usuario_username }} </h1>
+        </div>
+      </div>
+      <div class="content" *ngIf="comentarios.length > 0">
+        <div class="row">
+          <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+            <hr />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" *ngIf="comentarios.length <= 1">
+            <h1 class="m-0">  {{ comentarios.length }}  comentario </h1>
+          </div>
+          <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" *ngIf="comentarios.length > 1">
+            <h1 class="m-0">  {{ comentarios.length }}  comentarios </h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+            <hr />
+          </div>
+        </div>
+        <div class="row" *ngFor="let comentario of comentarios">
+          <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+            <div class="card">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+                    <img [src]="comentario | usuarioImage" class="img_comentarios" alt="Avatar">
+                  </div>
+                  <!-- Columna del nombre de usuario y comentario -->
+                  <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10">
+                      <div>
+                          <strong></strong>
+                      </div>
+                      <div>
+                          <span> {{ comentario.mensaje }} </span>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngFor="let video of videos">
+          <div class="container cursor_mi" [routerLink]="['/videos/'+ video.id]">
+            <div class="row">
+              <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                <img [src]="video | videoImage" [alt]="video.img_video" class="img_video img-thumbnail">
+              </div>
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div class="row">
+                  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <span> {{ video.title }} </span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <span style="text-align: center;"> {{ video.usuario_username }} </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

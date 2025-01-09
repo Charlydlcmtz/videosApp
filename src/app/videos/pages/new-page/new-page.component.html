@@ -1,0 +1,128 @@
+<div class="content-wrapper">
+
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">{{ currentVideo.id ? 'Editar Video' : 'Nuevo Video'}}</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a [routerLink]="'/heroes/list'">Inicio</a></li>
+            <li class="breadcrumb-item active">{{ currentVideo.id ? 'Editar Video' : 'Nuevo Video'}}</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+  <div class="container contenido">
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="card">
+          <div class="card-header bg-dark">{{ currentVideo.id ? 'Editar Video' : 'Nuevo Video'}}</div>
+          <div class="card-body">
+            <form [formGroup]="videoForm">
+              <div class="row form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <input
+                    class="form-control"
+                    type="text"
+                    required
+                    placeholder="Titulo del Video"
+                    formControlName="title"
+                  >
+                  <span *ngIf="isValidField('title')" class="form-text text-danger">
+                    {{ getFieldError('title') }}
+                  </span>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <input
+                    class="form-control"
+                    type="text"
+                    required
+                    placeholder="Descripción del video"
+                    formControlName="descripcion"
+                  >
+                  <span *ngIf="isValidField('descripcion')" class="form-text text-danger">
+                    {{ getFieldError('descripcion') }}
+                  </span>
+                </div>
+              </div>
+              <div class="file-input-wrapper">
+                <span class="label-input100">Imagen: </span>
+                <button class="custom-file-button" (click)="fileInputImage.click()">Seleccionar imagen</button>
+                <input
+                  #fileInputImage
+                  type="file"
+                  accept="image/*"
+                  (change)="onFileSelected($event, 'image')"
+                  class="input-hidden"
+                />
+                <span *ngIf="isValidField('img_video')" class="form-text text-danger">
+                  {{ getFieldError('img_video') }}
+                </span>
+              </div>
+
+              <div class="file-input-wrapper">
+                <span class="label-input100">Vídeo: </span>
+                <button class="custom-file-button" (click)="fileInputVideo.click()">Seleccionar vídeo</button>
+                <input
+                  #fileInputVideo
+                  type="file"
+                  accept="video/*"
+                  (change)="onFileSelected($event, 'video')"
+                  class="input-hidden"
+                />
+                <span *ngIf="isValidField('video_url')" class="form-text text-danger">
+                  {{ getFieldError('video_url') }}
+                </span>
+              </div>
+              <div class="row form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                 <button (click)="onSubmit()" class="btn btn-dark btn-lg btn-block">
+                    Guardar
+                 </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" *ngIf="previewUrl || previewUrlVideo">
+        <div class="card">
+          <div class="card-header bg-dark">Vista Previa</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="preview">
+                  <p>Vista previa de la imagen:</p>
+                  <img [src]="previewUrl" alt="Vista previa de imagen" class="img_video" />
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row centrar" *ngIf="isLoadingVideo">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <p>Cargando vídeo, por favor espere...</p>
+                <div class="spinner-border text-dark medium_loading" role="status">
+                  <span class="sr-only">Cargando...</span>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="!isLoadingVideo && previewUrlVideo">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="preview">
+                  <p>Vista previa del vídeo:</p>
+                  <video [src]="previewUrlVideo" controls class="video_class"></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
