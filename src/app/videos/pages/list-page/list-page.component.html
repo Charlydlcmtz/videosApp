@@ -1,11 +1,27 @@
-<div class="content-wrapper" *ngIf="finishedAuthCheck()">
+<div class="content-wrapper bg-dark" *ngIf="finishedAuthCheck()">
   <div class="container contenido">
     <div class="row">
       <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 form-group" *ngFor="let video of videos">
-        <div class="container cursor_mi" [routerLink]="['/videos/'+ video.id]">
+        <div class="container cursor_mi" [routerLink]="['/videos/'+ video.id]" (mouseenter)="playPreview(video)"
+        (mouseleave)="stopPreview(video)">
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <img [src]="video | videoImage" [alt]="video.img_video" class="img_video img-thumbnail">
+              <!-- Contenedor para imagen -->
+              <img
+                [src]="video | videoImage"
+                [alt]="video.img_video"
+                class="img_video img-thumbnail"
+                [id]="'img_' + video.id"
+              >
+              <!-- Contenedor para vídeo -->
+              <video
+                [src]="video | videoUrl"
+                muted
+                preload="metadata"
+                class="video-preview img-thumbnail"
+                [id]="'video_' + video.id"
+                style="display: none;"
+              ></video>
             </div>
           </div>
           <div class="row">
@@ -20,7 +36,7 @@
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
               <h4 style="text-align: center;">{{ video.usuario_username }}</h4>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" *ngIf="user_email == video.usuario_correo">
               <button class="btn btn-dark btn_redondo" [routerLink]="['/videos/edit/'+ video.id]"><i class="fa-solid fa-pencil"></i></button>
             </div>
           </div>
@@ -33,10 +49,26 @@
 <div class="container contenido" *ngIf="!finishedAuthCheck()">
   <div class="row">
     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" *ngFor="let video of videos">
-      <div class="container cursor_mi" [routerLink]="['/videos/'+ video.id]">
+      <div class="container cursor_mi" [routerLink]="['/videos/'+ video.id]" (mouseenter)="playPreview(video)"
+      (mouseleave)="stopPreview(video)">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <img [src]="video | videoImage" [alt]="video.img_video" class="img_video img-thumbnail">
+            <!-- Contenedor para imagen -->
+            <img
+              [src]="video | videoImage"
+              [alt]="video.img_video"
+              class="img_video img-thumbnail"
+              [id]="'img_' + video.id"
+            >
+            <!-- Contenedor para vídeo -->
+            <video
+              [src]="video | videoUrl"
+              muted
+              preload="metadata"
+              class="video-preview img-thumbnail"
+              [id]="'video_' + video.id"
+              style="display: none;"
+            ></video>
           </div>
         </div>
         <div class="row">

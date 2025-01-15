@@ -14,7 +14,7 @@ const routes: Routes = [
     children: [
       { path: 'new-video', canActivate: [ isAuthenticatedGuard ], component: NewPageComponent },
       { path: 'edit/:id', canActivate: [ isAuthenticatedGuard ], component: NewPageComponent },
-      { path: 'search/:name', component: SearchPageComponent },
+      { path: 'search/:title', component: SearchPageComponent },
       { path: 'list', component: ListPageComponent },
       { path: ':id', component: VideoPageComponent },
       { path: '**', redirectTo: 'list' },

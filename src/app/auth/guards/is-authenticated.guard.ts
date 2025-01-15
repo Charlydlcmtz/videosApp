@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { AuthStatus } from '../interfaces';
 
 export const isAuthenticatedGuard: CanActivateFn = (route, state) => {
+  debugger;
 
   const authService = inject( AuthService );
   const router = inject( Router );
@@ -12,7 +13,8 @@ export const isAuthenticatedGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  router.navigateByUrl('/auth/login');
-
+  authService.logout().subscribe({
+    next: () => router.navigateByUrl('/auth/login'),
+  });
   return false;
 };

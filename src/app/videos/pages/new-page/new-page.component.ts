@@ -13,17 +13,17 @@ import Swal from 'sweetalert2';
 })
 export class NewPageComponent implements OnInit {
 
-  public previewUrl: string | ArrayBuffer | null = null;
-  public previewUrlVideo: string | ArrayBuffer | null = null;
+  public previewUrl: string | undefined = undefined; // Única previsualización para imagen y vídeo
   isLoadingVideo: boolean = false; // Estado de carga del vídeo
 
   private fb = inject( FormBuilder );
 
   public videoForm: FormGroup = this.fb.group({
+    id: new FormControl<number>(0, { nonNullable: true}),
     title: ['', [Validators.required, Validators.maxLength(50) ]],
     descripcion: ['', [Validators.required, Validators.maxLength(200) ]],
-    img_video: [null, [Validators.required, ]],
-    video_url: [null, [Validators.required, ]],
+    img_video: [null, [Validators.required ]],
+    video_url: [null, [Validators.required ]],
   });
 
   constructor(
@@ -44,7 +44,6 @@ export class NewPageComponent implements OnInit {
       .pipe(
         switchMap( ({ id }) => this.videosService.getVideoById(id) ),
       ).subscribe( video => {
-
         if ( !video ) return this.router.navigateByUrl('/list');
         this.videoForm.reset( video );
         return;
@@ -58,11 +57,10 @@ export class NewPageComponent implements OnInit {
       const maxFileSize = 100 * 1024 * 1024; // 100 MB
 
       if (file.size > maxFileSize) {
-        alert('El archivo es demasiado grande. Seleccione un vídeo menor a 100 MB.');
+        alert('El archivo es demasiado grande. Seleccione un archivo menor a 100 MB.');
         return;
       }
 
-      // Validar tipo de archivo
       if (type === 'image' && !file.type.startsWith('image/')) {
         alert('Por favor, seleccione un archivo de imagen.');
         return;
@@ -71,108 +69,87 @@ export class NewPageComponent implements OnInit {
         return;
       }
 
-      // Mostrar estado de carga para vídeos
-      if (type === 'video') {
-        this.isLoadingVideo = true;
-      }
-
       const reader = new FileReader();
       reader.onload = () => {
-        if (type === 'image') {
-          this.previewUrl = reader.result as string;
-          this.videoForm.patchValue({ img_video: file });
-        } else if (type === 'video') {
-          this.previewUrlVideo = reader.result as string;
-          this.videoForm.patchValue({ video_url: file });
-          this.isLoadingVideo = false; // Finaliza la carga
+        if (typeof reader.result === 'string') {
+          this.previewUrl = reader.result; // Solo asigna cadenas de texto
+          if (type === 'image') {
+            this.videoForm.patchValue({ img_video: file });
+          } else if (type === 'video') {
+            this.videoForm.patchValue({ video_url: file });
+          }
         }
       };
 
       reader.onerror = () => {
         alert('Error al cargar el archivo. Inténtelo nuevamente.');
-        this.isLoadingVideo = false; // En caso de error
       };
 
       reader.readAsDataURL(file);
     }
   }
 
-  isValidField( field: string): boolean | null {
+  isValidField(field: string): boolean | null {
     return this.videoForm.controls[field].errors
-      && this.videoForm.controls[field].touched
+      && this.videoForm.controls[field].touched;
   }
 
-  getFieldError( field: string ): string | null {
-
-    if ( !this.videoForm.controls[field] ) return null;
+  getFieldError(field: string): string | null {
+    if (!this.videoForm.controls[field]) return null;
 
     const errors = this.videoForm.controls[field].errors || {};
 
-    switch ( field ) {
-      case 'title':
-        for (const key of Object.keys(errors)) {
-          switch ( key ) {
-            case 'required':
-              return 'El campo titulo es requerido';
-            break;
+    if (errors['required']) {
+      if (field === 'title') return 'El campo título es requerido';
+      if (field === 'descripcion') return 'El campo descripción es requerido';
+      if (field === 'img_video') return 'Es necesario subir una imagen para el video';
+      if (field === 'video_url') return 'Es necesario subir un video.';
+    }
 
-            case 'minlength':
-              return `El campo titulo requiere mínimo ${ errors['minlength'].requiredLength } letras.`;
-            break;
-
-          }
-        }
-      break;
-
-      case 'descripcion':
-        for (const key of Object.keys(errors)) {
-          switch ( key ) {
-            case 'required':
-              return 'El campo descripción es requerido';
-            break;
-
-            case 'minlength':
-              return `El campo descripción requiere mínimo ${ errors['minlength'].requiredLength } letras.`;
-            break;
-
-          }
-        }
-      break;
-
-      case 'img_video':
-        for (const key of Object.keys(errors)) {
-          switch ( key ) {
-            case 'required':
-              return 'Es necesario subir una imagen para el video';
-            break;
-          }
-        }
-      break;
-
-      case 'video_url':
-        for (const key of Object.keys(errors)) {
-          switch ( key ) {
-            case 'required':
-              return 'Es necesario subir un video.';
-            break;
-          }
-        }
-      break;
-
+    if (errors['maxlength']) {
+      const maxLength = errors['maxlength'].requiredLength;
+      return `El campo ${field} puede tener como máximo ${maxLength} caracteres.`;
     }
 
     return null;
   }
 
   onSubmit():void {
+
     if ( this.videoForm.invalid ) {
       this.videoForm.markAllAsTouched();
       return;
     }
 
     if ( this.currentVideo.id ) {
-      this.currentVideo.method = 'PATCH';
-      this.videosService.updateVideo( this.currentVideo )
+      const { id, title, descripcion, img_video, video_url } = this.videoForm.value;
+      const formDataEdit: FormData = new FormData();
+
+      formDataEdit.append('id', id);
+      formDataEdit.append('title', title);
+      formDataEdit.append('descripcion', descripcion);
+      formDataEdit.append('estatus', 'true');
+
+      // Asegúrate de agregar el campo `img_video` siempre
+      if (typeof img_video === 'object' && img_video instanceof File) {
+        formDataEdit.append('img_video', img_video); // Archivo seleccionado
+      } else {
+        formDataEdit.append('img_video', new Blob([""], { type: "text/plain" })); // Placeholder vacío
+      }
+
+      // Si no hay un nuevo archivo seleccionado para img_video
+      if (typeof video_url === 'object' && video_url instanceof File) {
+        formDataEdit.append('video_url', video_url); // Archivo seleccionado
+      } else {
+        formDataEdit.append('video_url', new Blob([""], { type: "text/plain" })); // Placeholder vacío
+      }
+
+      console.log('Contenido del FormData:');
+      formDataEdit.forEach((value, key) => {
+        console.log(key, value);
+      });
+
+      this.videosService.updateVideo( this.currentVideo, formDataEdit )
         .subscribe({
           next: () => {
             Swal.fire('Actualizado', 'Video actualizado correctamente', 'success')
@@ -200,8 +177,7 @@ export class NewPageComponent implements OnInit {
         Swal.fire('Guardado', video.message, 'success').then((result) => {
           if (result.isConfirmed) {
             this.videoForm.reset();
-            this.previewUrl = null;
-            this.previewUrlVideo = null;
+            this.previewUrl = '';
           }
         })
       }),
@@ -209,8 +185,7 @@ export class NewPageComponent implements OnInit {
         Swal.fire('Aviso', error, 'info').then((result) => {
           if (result.isConfirmed) {
             this.videoForm.reset();
-            this.previewUrl = null;
-            this.previewUrlVideo = null;
+            this.previewUrl = '';
           }
         })
       )

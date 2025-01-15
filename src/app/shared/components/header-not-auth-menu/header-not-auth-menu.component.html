@@ -1,19 +1,23 @@
 <!-- Navbar -->
-<nav class="main-header main_header navbar bg-dark navbar-expand navbar-white navbar-light">
-  <!-- Left navbar links -->
-  <ul class="navbar-nav">
-    <li class="nav-item d-none d-sm-inline-block">
-      <a [routerLink]="'list'" class="nav-link">Inicio</a>
-    </li>
-  </ul>
-
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+  <div class="container-fluid">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item d-none d-sm-inline-block">
+        <a [routerLink]="'list'" class="nav-link icon_white">Inicio</a>
+      </li>
+    </ul>
+    <form [formGroup]="buscarForm" class="d-flex" role="search">
+      <input class="form-control me-2" formControlName="title" type="search" placeholder="Buscar" aria-label="Search">
+      <button class="btn btn-outline-light" (click)="onSearch()">Buscar</button>
+    </form>
+  </div>
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
-
     <!-- Messages Dropdown Menu -->
     <li class="nav-item dropdown">
       <a class="nav-link" data-toggle="dropdown" [routerLink]="'auth'">
-        <i class="far fa-user"></i>
+        <i class="far fa-user icon_white"></i>
       </a>
     </li>
   </ul>

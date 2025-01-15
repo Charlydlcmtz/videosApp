@@ -8,7 +8,7 @@
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a [routerLink]="'/heroes/list'">Inicio</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="'/videos/list'">Inicio</a></li>
             <li class="breadcrumb-item active">{{ currentVideo.id ? 'Editar Video' : 'Nuevo Video'}}</li>
           </ol>
         </div><!-- /.col -->
@@ -91,7 +91,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" *ngIf="previewUrl || previewUrlVideo">
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
         <div class="card">
           <div class="card-header bg-dark">Vista Previa</div>
           <div class="card-body">
@@ -99,7 +99,7 @@
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="preview">
                   <p>Vista previa de la imagen:</p>
-                  <img [src]="previewUrl" alt="Vista previa de imagen" class="img_video" />
+                  <img [src]="currentVideo | videoImageEdit:previewUrl:'image'" alt="Previsualización o Imagen por defecto" class="img_video">
                 </div>
               </div>
             </div>
@@ -112,11 +112,12 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngIf="!isLoadingVideo && previewUrlVideo">
+            <div class="row">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="preview">
                   <p>Vista previa del vídeo:</p>
-                  <video [src]="previewUrlVideo" controls class="video_class"></video>
+                  <!-- <source [src]="currentVideo | videoImageEdit:previewUrl:'video'" type="video/mp4"> -->
+                  <video [src]="currentVideo| videoImageEdit:previewUrl:'video'" type="video/mp4" controls class="video_class"></video>
                 </div>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
 
@@ -10,11 +10,17 @@ import { AuthService } from '../../../auth/services/auth.service';
 })
 export class HeaderMenuComponent implements OnInit {
 
-  private authService = inject( AuthService );
+  private fb = inject( FormBuilder );
   public email: string | null ='';
-  public searchInput = new FormControl('');
-  private router = inject( Router );
-  public currentIcon = 'fa-solid fa-magnifying-glass';
+
+  public buscarForm: FormGroup = this.fb.group({
+    title: new FormControl<string>('', { nonNullable: true }),
+  });
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ){}
 
   ngOnInit(): void {
     this.email = localStorage.getItem('user');
@@ -27,9 +33,10 @@ export class HeaderMenuComponent implements OnInit {
   }
 
   onSearch(){
-    const title: string = this.searchInput.value || '';
-    if ( title != '') {
-      return this.router.navigateByUrl(`/videos/search/${title}`);
+    const { title } = this.buscarForm.value;
+    const titulo_video = title;
+    if ( titulo_video != '') {
+      return this.router.navigateByUrl(`/videos/search/${titulo_video}`);
 
     }
     return this.router.navigateByUrl(`/videos/list`);

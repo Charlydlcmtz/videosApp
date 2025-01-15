@@ -11,6 +11,7 @@ import { VideoImagePipe } from './pipes/video-image.pipe';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VideoUrlPipe } from './pipes/video-url.pipe';
 import { UsuarioImagePipe } from './pipes/usuario-image.pipe';
+import { VideoImageEditPipe } from './pipes/video-image-edit.pipe';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { UsuarioImagePipe } from './pipes/usuario-image.pipe';
     SearchPageComponent,
     VideoImagePipe,
     VideoUrlPipe,
-    UsuarioImagePipe
+    UsuarioImagePipe,
+    VideoImageEditPipe
   ],
   imports: [
     CommonModule,

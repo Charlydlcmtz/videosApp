@@ -21,7 +21,6 @@ export class VideosService {
   }
 
   getVideoById( id: number): Observable<Video | undefined>{
-
     // Verifica si estás en un entorno de navegador
     if (typeof window === 'undefined') {
       console.error('No se puede acceder a localStorage fuera del navegador.');
@@ -44,21 +43,20 @@ export class VideosService {
     return this.http.post<Video>(`${ this.baseUrl }/videos/video_save`, video, { headers });
   }
 
-  updateVideo( video: Video): Observable<Video>{
+  updateVideo( video: Video, dataVideo: any): Observable<any>{
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${ token }`);
 
     if ( !video.id ) throw Error('El video es requerido');
-    return this.http.patch<Video>(`${ this.baseUrl }/editar/${ video.id }`, video, { headers })
+    return this.http.post<Video>(`${ this.baseUrl }/videos/editar/${ video.id }`, dataVideo, { headers })
       .pipe(
         catchError( err => throwError( () => err.error.message ))
       );
   }
 
   searchVideoByName( title: string): Observable<Video[] | undefined>{
-
-    return this.http.get<Video[]>(`${ this.baseUrl }/buscar_video/${ title }`)
+    return this.http.get<Video[]>(`${ this.baseUrl }/videos/buscar/${ title }`)
       .pipe(
         catchError( error => of(undefined) )
       );
